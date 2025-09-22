@@ -1,61 +1,61 @@
+using CLI.UI.ManagePosts;
 using CLI.UI.ManageUsers;
-using Entities;
 using RepositoryContracts;
 
-namespace CLI.UI;
+namespace CLI;
 
-public class CLIApp
+public class CliApp(IUserRepository userRepository, IPostRepository postRepository, ICommentRepository commentRepository)
 {
-    private readonly IUserRepository userRepository;
-    private readonly ICommentRepository commentRepository;
-    private readonly IPostRepository postRepository;
-
-    public CLIApp(IUserRepository userRepository, ICommentRepository commentRepository, IPostRepository postRepository)
-    {
-        this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
-        this.postRepository = postRepository;
-    }
+    private readonly IUserRepository userRepository = userRepository;
+    private readonly IPostRepository postRepository = postRepository;
+    private readonly ICommentRepository commentRepository = commentRepository;
 
     public async Task StartAsync()
     {
+        await StartMainMenu();
+
+        Console.WriteLine("Exiting app...");
+    }
+
+    // This is responsible for printing out the main menu and handling the user's choice.
+    private async Task StartMainMenu()
+    {
         while (true)
         {
-            Console.WriteLine("\n=== Main Menu ===");
-            Console.WriteLine("1. Create User");
-            Console.WriteLine("2. List Users");
-            Console.WriteLine("3. Manage Users");
-            Console.WriteLine("0. Exit");
+            PrintMainMenu();
 
-            Console.WriteLine("Select Option: ");
-            string input = Console.ReadLine();
+            string? selectedOption = Console.ReadLine();
 
-            switch (input)
+            // read the selected option, and either instantiate the view and show it, or use "<" to exit (return, which exists to the main method, and terminates the program).
+            switch (selectedOption)
             {
                 case "1":
-                    var createUsersView = new CreateUsersView(userRepository);
-                    await createUsersView.ShowAsync();
+                    // instantiate the view for manage posts, and show it.
+                    ManagePostsView managePostsView = new(postRepository, commentRepository, userRepository);
+                    await managePostsView.ShowAsync();
                     break;
-
                 case "2":
-                    var listUsersView = new ListUsersView(userRepository);
-                    await listUsersView.ShowAsync();
-                    break;
-
-                case "3":
-                    var manageUsersView = new ManageUsersView(userRepository);
+                    ManageUsersView manageUsersView = new(userRepository);
                     await manageUsersView.ShowAsync();
                     break;
-
-                case "0":
-                    Console.WriteLine("Goodbye!");
-                    return;
-
+                case "<": return;
                 default:
-                    Console.WriteLine("Invalid Option. Please try again.");
+                    // in case the input was not matched, try again.
+                    Console.WriteLine("Invalid option, please try again.\n\n");
                     break;
             }
         }
     }
 
+    private static void PrintMainMenu()
+    {
+        // The three double quotes are used to write a multiline string in C#, which keeps the formatting.
+        const string menuOptions = """
+                                   Please select:
+                                   1) Manage posts
+                                   2) Manage users
+                                   <) Exit application
+                                   """;
+        Console.WriteLine(menuOptions);
+    }
 }

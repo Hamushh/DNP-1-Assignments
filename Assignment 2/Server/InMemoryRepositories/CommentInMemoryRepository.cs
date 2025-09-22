@@ -10,11 +10,7 @@ public class CommentInMemoryRepository : ICommentRepository
 
     public CommentInMemoryRepository()
     {
-        comments = new List<Comment>
-        {
-            new Comment { Id = 1, Body = "This is my First Comment", PostId = 1, UserId = 1},
-            new Comment { Id = 2, Body = "This is my Second Comment", PostId = 2, UserId = 2}
-        };
+        SeedDataAsync().GetAwaiter();
     }
 
     public Task<Comment> AddAsync(Comment comment)
@@ -63,5 +59,33 @@ public class CommentInMemoryRepository : ICommentRepository
     public IQueryable<Comment> GetManyAsync()
     {
         return comments.AsQueryable();
+    }
+
+    private async Task SeedDataAsync()
+    {
+        Comment comment1 = new()
+        {
+            Id = 1,
+            Body = "comment1",
+            PostId = 1,
+            UserId = 1,
+        };
+        Comment comment2 = new()
+        {
+            Id = 2,
+            Body = "comment2",
+            PostId = 2,
+            UserId = 2,
+        };
+        Comment comment3 = new()
+        {
+            Id = 3,
+            Body = "comment3",
+            PostId = 2,
+            UserId = 2,
+        };
+        await AddAsync(comment1);
+        await AddAsync(comment2);
+        await AddAsync(comment3);
     }
 }

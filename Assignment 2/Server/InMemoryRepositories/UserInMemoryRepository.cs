@@ -10,11 +10,7 @@ public class UserInMemoryRepository : IUserRepository
 
     public UserInMemoryRepository()
     {
-        users = new List<User>
-        {
-            new User { Id = 1, UserName = "YxngHamzyz", Password = "Hanan123"},
-            new User { Id = 2, UserName = "Hamuushh", Password = "Sheikhdon10"}
-        };
+        SeedDataAsync().GetAwaiter();
     }
 
     public Task<User> AddAsync(User user)
@@ -57,12 +53,31 @@ public class UserInMemoryRepository : IUserRepository
             throw new InvalidOperationException($"User with ID '{id}' not found");
         }
         return Task.FromResult(userSingleToGet);
-        
+
     }
 
     public IQueryable<User> GetManyAsync()
     {
         return users.AsQueryable();
+    }
+    
+    private async Task SeedDataAsync()
+    {
+        User user1 = new()
+        {
+            Id = 1,
+            UserName = "User1",
+            Password = "123",
+        };
+        User user2 = new()
+        {
+            Id = 2,
+            UserName = "User2",
+            Password = "abc",
+        };
+        await AddAsync(user1);
+        await AddAsync(user2);
+
     }
 
 }

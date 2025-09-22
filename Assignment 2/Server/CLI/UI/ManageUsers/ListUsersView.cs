@@ -1,31 +1,31 @@
+using System.Threading.Tasks;
+using Entities;
 using RepositoryContracts;
 
 namespace CLI.UI.ManageUsers;
 
-public class ListUsersView
+public class ListUsersView(IUserRepository userRepository)
 {
-    private readonly IUserRepository userRepo;
+    private readonly IUserRepository userRepository = userRepository;
 
-    public ListUsersView(IUserRepository userRepo)
+    public void Show()
     {
-        this.userRepo = userRepo;
+        Console.WriteLine();
+        ViewUsers();
     }
 
-    public async Task ShowAsync()
+    private void ViewUsers()
     {
-        Console.WriteLine("\n=== List of Users ===");
+        IEnumerable<User> many = userRepository.GetManyAsync();
+        List<User> users = [.. many.OrderBy(u => u.Id)];
 
-        var users = userRepo.GetManyAsync().ToList();
-
-        if (!users.Any())
+        Console.WriteLine("Users:");
+        Console.WriteLine("[");
+        foreach (User user in users)
         {
-            Console.WriteLine("No users found");
-            return;
+            Console.WriteLine($"\tID: {user.Id}, Name: {user.UserName}");
         }
-
-        foreach (var user in users)
-        {
-            Console.WriteLine($"ID: {user.Id}, Username: {user.UserName}");
-        }
+        Console.WriteLine("]");
+        Console.WriteLine();
     }
 }

@@ -10,11 +10,7 @@ public class PostInMemoryRepository : IPostRepository
 
     public PostInMemoryRepository()
     {
-        posts = new List<Post>
-        {
-            new Post { Id = 1, Title = "Hello Everyone", Body = "My First Post!", UserId = 1},
-            new Post { Id = 2, Title = "This is a Post", Body = "My Second Post!", UserId = 2}
-        };
+        SeedDataAsync().GetAwaiter();
     }
 
     public Task<Post> AddAsync(Post post)
@@ -62,6 +58,34 @@ public class PostInMemoryRepository : IPostRepository
     public IQueryable<Post> GetManyAsync()
     {
         return posts.AsQueryable();
+    }
+
+    private async Task SeedDataAsync()
+    {
+        Post post1 = new()
+        {
+            Id = 1,
+            Title = "post1title",
+            Body = "post1",
+            UserId = 1,
+        };
+        Post post2 = new()
+        {
+            Id = 2,
+            Title = "post2title",
+            Body = "post2",
+            UserId = 2,
+        };
+        Post post3 = new()
+        {
+            Id = 3,
+            Title = "post3title",
+            Body = "post3",
+            UserId = 1,
+        };
+        await AddAsync(post1);
+        await AddAsync(post2);
+        await AddAsync(post3);
     }
 
 }

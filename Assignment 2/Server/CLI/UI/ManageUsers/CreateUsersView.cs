@@ -3,30 +3,103 @@ using RepositoryContracts;
 
 namespace CLI.UI.ManageUsers;
 
-public class CreateUsersView
+public class CreateUserView(IUserRepository userRepository)
 {
-    private readonly IUserRepository userRepo;
+    private readonly IUserRepository userRepository = userRepository;
 
-    public CreateUsersView(IUserRepository userRepo)
+    public Task ShowAsync()
     {
-        this.userRepo = userRepo;
+        Console.WriteLine();
+        return CreateUserAsync();
     }
 
-    public async Task ShowAsync()
+    private Task CreateUserAsync()
     {
-        Console.WriteLine("\n=== Create New User ===");
+        while (true)
+        {
+            Console.WriteLine("You are creating a user.");
+            Console.WriteLine("Please insert user name:");
+            string? name = null;
+            while (string.IsNullOrEmpty(name))
+            {
+                name = Console.ReadLine();
+                if (string.IsNullOrEmpty(name))
+                {
+                    Console.WriteLine("Name cannot be empty.");
+                    continue;
+                }
 
-        Console.WriteLine("Enter Username: ");
-        string name = Console.ReadLine();
+                if ("<".Equals(name))
+                {
+                    Console.WriteLine("User creation cancelled.");
+                    return Task.CompletedTask;
+                }
+            }
 
-        Console.WriteLine("Enter Password: ");
-        string password = Console.ReadLine();
+            Console.WriteLine("Please insert password");
+            string? password = null;
+            while (string.IsNullOrEmpty(password))
+            {
+                password = Console.ReadLine();
+                if (string.IsNullOrEmpty(password))
+                {
+                    Console.WriteLine("Password cannot be empty.");
+                    continue;
+                }
 
-        var user = new User() { UserName = name, Password = password };
+                if ("<".Equals(name))
+                {
+                    Console.WriteLine("User creation cancelled.");
+                    return Task.CompletedTask;
+                }
+            }
 
-        await userRepo.AddAsync(user);
+            Console.WriteLine("You are about to create a user with the following information:");
+            Console.WriteLine($"User name: {name}");
+            Console.WriteLine($"Password: {password}");
+            Console.WriteLine("Do you want to proceed? (y/n)");
 
-        Console.WriteLine($"User '{name}' created.");
+            string? confirmation = null;
+            while (true)
+            {
+                confirmation = Console.ReadLine();
+                if (string.IsNullOrEmpty(confirmation))
+                {
+                    Console.WriteLine("Please select an option.\n\n");
+                    continue;
+                }
+
+                confirmation = confirmation.ToLower();
+                if (confirmation != "y" && confirmation != "n")
+                {
+                    Console.WriteLine("Please select a valid option.\n\n");
+                    continue;
+                }
+
+                break;
+            }
+
+            switch (confirmation.ToLower())
+            {
+                case "y":
+                    return AddUserAsync(name, password);
+                case "n":
+                    {
+                        Console.WriteLine("User creation cancelled.");
+                        return Task.CompletedTask;
+                    }
+                default:
+                    Console.WriteLine("Invalid option, please try again.\n\n");
+                    break;
+            }
+        }
     }
 
+    private async Task AddUserAsync(string name, string password)
+    {
+        User user = new() { UserName = name, Password = password };
+        User created = await userRepository.AddAsync(user);
+        Console.WriteLine("User created successfully:");
+        Console.WriteLine($"ID: {created.Id}");
+    }
 }
