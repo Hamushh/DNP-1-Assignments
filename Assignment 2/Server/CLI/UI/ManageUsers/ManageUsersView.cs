@@ -32,6 +32,7 @@ public class ManageUsersView(IUserRepository userRepository)
                 case "4":
                     new ListUsersView(userRepository).Show();
                     break;
+                case "<": return;
                 default:
                     Console.WriteLine("Invalid option, please try again.\n\n");
                     break;

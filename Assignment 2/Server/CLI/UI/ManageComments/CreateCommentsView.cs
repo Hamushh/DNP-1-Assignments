@@ -61,7 +61,7 @@ public class CreateCommentView(ICommentRepository commentRepository)
 
                 if (int.TryParse(input, out userId))
                 {
-                    // TODO check if user exists
+                    
                     break;
                 }
                 else
@@ -90,7 +90,7 @@ public class CreateCommentView(ICommentRepository commentRepository)
 
                 if (int.TryParse(input, out postId))
                 {
-                    // TODO check if post exists
+                    
                     break;
                 }
                 else
@@ -99,7 +99,7 @@ public class CreateCommentView(ICommentRepository commentRepository)
                 }
             }
 
-            // Then print out the information, and ask for confirmation.
+            
 
             Console.WriteLine("You are about to create a comment.");
             Console.WriteLine("Do you want to proceed? (y/n)");
@@ -126,7 +126,7 @@ public class CreateCommentView(ICommentRepository commentRepository)
 
             switch (confirmation.ToLower())
             {
-                case "y": return AddCommentAsync(content, userId, postId); // This method returns a Task. I don't need to await it here, as the return will exit the method, so I just return it to the caller to await it.
+                case "y": return AddCommentAsync(content, userId, postId);
                 case "n":
                     {
                         Console.WriteLine("User creation cancelled.");
