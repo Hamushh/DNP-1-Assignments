@@ -1,0 +1,18 @@
+﻿@page "/"
+@using DTOs
+@inject ClientBlazorApp.Services.ServiceInterfaces.IUserService UserService
+@inject NavigationManager navMgr
+
+<AuthorizeView>
+    <Authorized Context="auth">
+        <h3>Hello, @auth.User.Identity?.Name</h3>
+    </Authorized>
+
+    <NotAuthorized>
+        lol you are not logged in!
+    </NotAuthorized>
+</AuthorizeView>
+
+Here you can browse interesting posts.
+<button @onclick='() => navMgr.NavigateTo("loginpage")'>go to login</button>
+

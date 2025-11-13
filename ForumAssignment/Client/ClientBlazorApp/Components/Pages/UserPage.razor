@@ -1,0 +1,56 @@
+@page "/user"
+@using ClientBlazorApp.Client.Services.ServiceControllers
+@using ClientBlazorApp.Services.ServiceInterfaces;
+@inject HttpUserService HttpUserService
+@using DTOs.UserDTOs;
+
+<div class="mb-3">
+  <label class="form-label">Username</label>
+  <input class="form-control" @bind="newUser.UserName" placeholder="Enter username" />
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Password</label>
+  <input class="form-control" type="password" @bind="passwordInput" placeholder="Enter password" />
+</div>
+
+<button class="btn btn-primary" @onclick="CreateUser">Create User</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+  <p>@message</p>
+}
+
+@code {
+   private string? message;
+    private CreateUserDTO newUser = new()
+    {
+        UserName = string.Empty,
+        Password = ""
+    };
+    private string? passwordInput;
+
+    private async Task CreateUser()
+    {
+        try
+        {
+            newUser.Password = passwordInput ?? string.Empty;
+
+            var created = await HttpUserService.AddUserAsync(newUser);
+            message = $" User '{created.UserName}' created successfully!";
+            
+            // Clear input fields
+            newUser = new()
+            {
+                UserName = string.Empty,
+                Password = ""
+            };
+            passwordInput = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            message = $" Error: {ex.Message}";
+        }
+
+    }
+}
