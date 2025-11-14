@@ -12,6 +12,8 @@ public interface ICommentService
     public Task<OutputCommentDTO> GetSingleCommentAsync(int id);
 
     public Task<IEnumerable<OutputCommentDTO>> GetAllCommentsAsync(string? username);
-
+    
+    public Task<IEnumerable<OutputCommentDTO>> GetCommentsByPostIdAsync(int postId);
+    
     public Task DeleteCommentAsync(int id);
 }

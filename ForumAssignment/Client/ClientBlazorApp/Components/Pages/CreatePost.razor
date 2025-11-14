@@ -1,57 +1,65 @@
-@page "/create-post"
-@attribute [Authorize]
+@page "/post/create"
 @using ClientBlazorApp.Services.ServiceInterfaces
 @using DTOs.PostDTOs
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization
 @rendermode InteractiveServer
-@inject IPostService PostService
+@inject IPostService HttpPostService
+@inject NavigationManager Nav
 
+<div class="container mt-4">
 
-<h3>Add post</h3>
-<div class="mb-3">
-    <label class="form-label">Title</label>
-    <input class="form-control" @bind="title" placeholder="Enter post title" />
+    <h1>Create Post</h1>
+
+    <div class="card p-4 mt-3">
+
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input class="form-control" @bind="_title" placeholder="Enter post title"/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Author ID</label>
+            <input class="form-control" type="number" @bind="_userId" placeholder="Enter User ID" />
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Body:</label>
+            <textarea class="form-control" @bind="_body" placeholder="Write your post..." rows="5"></textarea>
+        </div>
+
+        <button class="btn btn-primary" @onclick="AddPostAsync">Add Post</button>
+
+    </div>
+
 </div>
 
-<div class="mb-3">
-    <label class="form-label">Author ID</label>
-    <input class="form-control" type="number" @bind="authorUserId" placeholder="Enter author ID" />
-</div>
-
-<div class="mb-3">
-    <label class="form-label">Body</label>
-    <textarea class="form-control" @bind="body" placeholder="Write your post..." rows="5"></textarea>
-</div>
-
-<button class="btn btn-primary" @onclick="AddPostAsync">Add</button>
-
-@if (!string.IsNullOrEmpty(message))
+@if (!string.IsNullOrEmpty(_message))
 {
-    <p class="text-success mt-3">@message</p>
+    <p class="text-success mt-3">@_message</p>
 }
 
-@if (!string.IsNullOrEmpty(error))
+@if (!string.IsNullOrEmpty(_error))
 {
-    <p class="text-danger mt-3">@error</p>
+    <p class="text-danger mt-3">@_error</p>
 }
 
 @code {
-     [CascadingParameter] public Task<AuthenticationState> State { get; set; } = default!;
-
-    string title = "", body = "";
-    int? authorUserId = null;
-    string? error;
-    private string? message;
+    // [CascadingParameter] public Task<AuthenticationState> State { get; set; } = null!;
+     
+    string _title = string.Empty;
+    int? _userId = 1;
+    string _body = string.Empty;
+    string? _error;
+    private string? _message;
     
-        protected override async Task OnInitializedAsync()
+    /*
+    protected override async Task OnInitializedAsync()
     {
         var authState = await State;
         var user = authState.User;
 
         if (user.Identity is null || !user.Identity.IsAuthenticated)
         {
-            error = "You must be logged in.";
+            _error = "You must be logged in.";
             return;
         }
 
@@ -59,40 +67,43 @@
         var idStr = user.Claims.SingleOrDefault(c => c.Type == "Id")?.Value;
         if (!int.TryParse(idStr, out var uid))
         {
-            error = "Cannot read your user id from claims.";
+            _error = "Cannot read your user id from claims.";
             return;
         }
 
-        authorUserId = uid;
+        _userId = uid;
     }
+    */
 
     async Task AddPostAsync()
     {
-       if (authorUserId is null)
+       if (_userId is null)
         {
-            error = "You must be logged in.";
-            message = null;
+            _error = "You must be logged in.";
+            _message = null;
             return;
         }
 
         try
         {
-            var added = await PostService.AddPostAsync(new CreatePostDTO
+            var added = await HttpPostService.AddPostAsync(new CreatePostDTO
             {
-                Title = title,
-                Body  = body,
-                UserId = authorUserId.Value
+                Title = _title,
+                Body  = _body,
+                UserId = _userId.Value
             });
 
-            message = $" Post '{added.Title}' created!";
-            error = null;
-            title = "";
-            body  = "";
+            _message = $" Post '{added.Title}' created!";
+            _error = null;
+            _title = "";
+            _body  = "";
         }
         catch (Exception ex)
         {
-            error = $" {ex.Message}";
-            message = null;
+            _error = $" {ex.Message}";
+            _message = null;
         }
+        
+        
     }
 }

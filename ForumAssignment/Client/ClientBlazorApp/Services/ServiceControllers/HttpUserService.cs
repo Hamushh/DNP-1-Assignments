@@ -1,10 +1,8 @@
-using System;
-using System.Net.Http.Json;
 using System.Text.Json;
 using ClientBlazorApp.Services.ServiceInterfaces;
 using DTOs.UserDTOs;
 
-namespace ClientBlazorApp.Client.Services.ServiceControllers;
+namespace ClientBlazorApp.Services.ServiceControllers;
 
 public class HttpUserService : IUserService
 {
@@ -22,7 +20,7 @@ public class HttpUserService : IUserService
 
     public async Task<OutputUserDTO> AddUserAsync(CreateUserDTO request)
     {
-        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("users", request);
+        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("api/users", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -33,7 +31,7 @@ public class HttpUserService : IUserService
 
     public async Task<OutputUserDTO> UpdateUserAsync(int id, UpdateUserDTO request)
     {
-        HttpResponseMessage httpResponse = await client.PutAsJsonAsync($"users/{id}", request);
+        HttpResponseMessage httpResponse = await client.PutAsJsonAsync($"api/users/{id}", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -47,7 +45,7 @@ public class HttpUserService : IUserService
 
     public async Task<OutputUserDTO> GetSingleUserAsync(int id)
     {
-        var dto = await client.GetFromJsonAsync<OutputUserDTO>($"users/{id}", JsonOpts)!;
+        var dto = await client.GetFromJsonAsync<OutputUserDTO>($"api/users/{id}", JsonOpts)!;
         if (dto is null)
         {
             throw new Exception("User not found.");
@@ -58,8 +56,8 @@ public class HttpUserService : IUserService
     public async Task<IEnumerable<OutputUserDTO>> GetAllUsersAsync(string? username)
     {
         var url = string.IsNullOrWhiteSpace(username)
-        ? "users"
-        : $"users?username={Uri.EscapeDataString(username)}";
+        ? "api/users"
+        : $"api/users?username={Uri.EscapeDataString(username)}";
 
         var list = await client.GetFromJsonAsync<IEnumerable<OutputUserDTO>>(url, JsonOpts)!;
         return list ?? Enumerable.Empty<OutputUserDTO>();
@@ -68,7 +66,7 @@ public class HttpUserService : IUserService
 
     public async Task DeleteUserAsync(int id)
     {
-        HttpResponseMessage httpResponse = await client.DeleteAsync($"users{id}");
+        HttpResponseMessage httpResponse = await client.DeleteAsync($"api/users/{id}");
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {

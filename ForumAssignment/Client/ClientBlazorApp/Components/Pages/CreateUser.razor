@@ -1,0 +1,67 @@
+@page "/user/create"
+@using ClientBlazorApp.Services.ServiceInterfaces
+@rendermode InteractiveServer
+@inject IUserService HttpUserService
+@using DTOs.UserDTOs;
+
+<div class="container mt-4">
+
+    <h1>Create User</h1>
+
+    <div class="card p-4 mt-3">
+
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input class="form-control" @bind="_newUser.UserName" placeholder="Enter username"/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" @bind="_passwordInput" placeholder="Enter password" />
+        </div>
+
+        <button class="btn btn-primary" @onclick="AddUser">Add User</button>
+
+    </div>
+
+</div>
+
+
+@if (!string.IsNullOrEmpty(_message))
+{
+  <p>@_message</p>
+}
+
+@code {
+   private string? _message;
+    private CreateUserDTO _newUser = new()
+    {
+        UserName = string.Empty,
+        Password = string.Empty
+    };
+    private string? _passwordInput;
+
+    private async Task AddUser()
+    {
+        try
+        {
+            _newUser.Password = _passwordInput ?? string.Empty;
+
+            var created = await HttpUserService.AddUserAsync(_newUser);
+            _message = $" User '{created.UserName}' created successfully!";
+            
+            // Clear input fields
+            _newUser = new()
+            {
+                UserName = string.Empty,
+                Password = string.Empty
+            };
+            _passwordInput = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            _message = $" Error: {ex.Message}";
+        }
+
+    }
+}

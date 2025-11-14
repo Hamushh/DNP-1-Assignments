@@ -1,5 +1,5 @@
-using ClientBlazorApp.Client.Services.ServiceControllers;
 using ClientBlazorApp.Components;
+using ClientBlazorApp.Services.ServiceControllers;
 using ClientBlazorApp.Services.ServiceInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,9 +12,19 @@ builder.Services.AddScoped<IPostService, HttpPostService>();
 builder.Services.AddScoped<IUserService, HttpUserService>();
 builder.Services.AddScoped<ICommentService, HttpCommentService>();
 
-builder.Services.AddHttpClient("WebAPI", client =>
+builder.Services.AddHttpClient<IPostService, HttpPostService>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5173"); // your API URL
+    client.BaseAddress = new Uri("http://localhost:5173/");  // your WebAPI port
+});
+
+builder.Services.AddHttpClient<ICommentService, HttpCommentService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5173/");
+});
+
+builder.Services.AddHttpClient<IUserService, HttpUserService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5173/");
 });
 
 var app = builder.Build();
@@ -28,7 +38,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 

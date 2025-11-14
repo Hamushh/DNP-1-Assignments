@@ -4,7 +4,7 @@ using System.Text.Json;
 using ClientBlazorApp.Services.ServiceInterfaces;
 using DTOs.PostDTOs;
 
-namespace ClientBlazorApp.Client.Services.ServiceControllers;
+namespace ClientBlazorApp.Services.ServiceControllers;
 
 public class HttpPostService : IPostService
 {
@@ -22,7 +22,7 @@ public class HttpPostService : IPostService
 
     public async Task<OutputPostDTO> AddPostAsync(CreatePostDTO request)
     {
-        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("posts", request);
+        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("api/posts", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -34,7 +34,7 @@ public class HttpPostService : IPostService
 
     public async Task<OutputPostDTO> UpdatePostAsync(int id, UpdatePostDTO request)
     {
-        HttpResponseMessage httpResponse = await client.PutAsJsonAsync($"posts/{id}", request);
+        HttpResponseMessage httpResponse = await client.PutAsJsonAsync($"api/posts/{id}", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -46,7 +46,7 @@ public class HttpPostService : IPostService
 
     public async Task<OutputPostDTO> GetSinglePostAsync(int id)
     {
-        var dto = await client.GetFromJsonAsync<OutputPostDTO>($"posts/{id}", JsonOpts)!;
+        var dto = await client.GetFromJsonAsync<OutputPostDTO>($"api/posts/{id}", JsonOpts)!;
         if (dto is null)
         {
             throw new Exception("Post not found.");
@@ -54,11 +54,11 @@ public class HttpPostService : IPostService
         return dto;
     }
 
-    public async Task<IEnumerable<OutputPostDTO>> GetAllPostsAsync(string? username)
+    public async Task<IEnumerable<OutputPostDTO>> GetAllPostsAsync(string? username = null)
     {
         var url = string.IsNullOrWhiteSpace(username)
-            ? "posts"
-            : $"posts?username={Uri.EscapeDataString(username)}";
+            ? "api/posts"
+            : $"api/posts?username={Uri.EscapeDataString(username)}";
 
         var list = await client.GetFromJsonAsync<IEnumerable<OutputPostDTO>>(url, JsonOpts)!;
         return list ?? Enumerable.Empty<OutputPostDTO>();
@@ -66,7 +66,7 @@ public class HttpPostService : IPostService
 
     public async Task DeletePostAsync(int id)
     {
-        HttpResponseMessage httpResponse = await client.DeleteAsync($"posts/{id}");
+        HttpResponseMessage httpResponse = await client.DeleteAsync($"api/posts/{id}");
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {

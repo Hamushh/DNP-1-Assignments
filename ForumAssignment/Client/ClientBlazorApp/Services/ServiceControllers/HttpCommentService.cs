@@ -4,7 +4,7 @@ using System.Text.Json;
 using ClientBlazorApp.Services.ServiceInterfaces;
 using DTOs.CommentDTOs;
 
-namespace ClientBlazorApp.Client.Services.ServiceControllers;
+namespace ClientBlazorApp.Services.ServiceControllers;
 
 public class HttpCommentService : ICommentService
 {
@@ -22,7 +22,7 @@ public class HttpCommentService : ICommentService
 
     public async Task<OutputCommentDTO> AddCommentAsync(CreateCommentDTO request)
     {
-        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("comments", request);
+        HttpResponseMessage httpResponse = await client.PostAsJsonAsync("api/comments", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -34,7 +34,7 @@ public class HttpCommentService : ICommentService
 
     public async Task<OutputCommentDTO> UpdateCommentAsync(int id, UpdateCommentDTO request)
     {
-        HttpResponseMessage httpResponse = await client.PutAsJsonAsync($"comments/{id}", request);
+        HttpResponseMessage httpResponse = await client.PutAsJsonAsync($"api/comments/{id}", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -46,7 +46,7 @@ public class HttpCommentService : ICommentService
 
     public async Task<OutputCommentDTO> GetSingleCommentAsync(int id)
     {
-        var dto = await client.GetFromJsonAsync<OutputCommentDTO>($"comments/{id}", JsonOpts)!;
+        var dto = await client.GetFromJsonAsync<OutputCommentDTO>($"api/comments/{id}", JsonOpts)!;
         if (dto is null)
         {
             throw new Exception("Comment not found.");
@@ -57,16 +57,25 @@ public class HttpCommentService : ICommentService
     public async Task<IEnumerable<OutputCommentDTO>> GetAllCommentsAsync(string? username)
     {
         var url = string.IsNullOrWhiteSpace(username)
-            ? "comments"
-            : $"comments?username={Uri.EscapeDataString(username)}";
+            ? "api/comments"
+            : $"api/comments?username={Uri.EscapeDataString(username)}";
 
         var list = await client.GetFromJsonAsync<IEnumerable<OutputCommentDTO>>(url, JsonOpts)!;
         return list ?? Enumerable.Empty<OutputCommentDTO>();
     }
 
+    public async Task<IEnumerable<OutputCommentDTO>> GetCommentsByPostIdAsync(int postId)
+    {
+        var url = $"api/comments/post/{postId}";
+
+        var comments = await client.GetFromJsonAsync<IEnumerable<OutputCommentDTO>>(url, JsonOpts);
+
+        return comments?.ToList() ?? new List<OutputCommentDTO>();
+    }
+
     public async Task DeleteCommentAsync(int id)
     {
-        HttpResponseMessage httpResponse = await client.DeleteAsync($"comments/{id}");
+        HttpResponseMessage httpResponse = await client.DeleteAsync($"api/comments/{id}");
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {

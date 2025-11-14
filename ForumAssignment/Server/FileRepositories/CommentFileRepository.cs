@@ -74,4 +74,14 @@ public class CommentFileRepository : ICommentRepository
         List<Comment> comments = JsonSerializer.Deserialize<List<Comment>>(commentsAsJson)!;
         return comments.AsQueryable();
     }
+
+    public async Task<IEnumerable<Comment>> GetAllCommentsByPostIdAsync(int postId)
+    {
+        
+        var allComments = GetManyAsync().ToList();
+    
+        // Filter by post ID
+        return allComments.Where(c => c.PostId == postId);
+    }
+
 }

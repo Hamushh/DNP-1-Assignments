@@ -76,5 +76,13 @@ public class UserFileRepository : IUserRepository
         users[index] = user;
         usersAsJson = JsonSerializer.Serialize(users);
         await File.WriteAllTextAsync(filePath, usersAsJson);
-    } 
+    }
+
+    public async Task<User?> GetByUserNameAsync(string UserName)
+    {
+        var usersAsJson = await File.ReadAllTextAsync(filePath);
+        var users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
+        return users.FirstOrDefault(u =>
+            u.UserName.Equals(UserName, StringComparison.OrdinalIgnoreCase));
+    }
 }

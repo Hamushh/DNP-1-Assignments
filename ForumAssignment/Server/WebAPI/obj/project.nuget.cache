@@ -1,29 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "Any+Z4M3BUc=",
+  "dgSpecHash": "a/DbMOnE4sE=",
   "success": true,
   "projectFilePath": "C:\\Users\\sheik\\OneDrive - ViaUC\\VIA University\\Subjects and Education\\Software Engineering\\Semester 3\\DNP-1\\DNP-1 Assignments\\ForumAssignment\\Server\\WebAPI\\WebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sheik\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.0\\microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
-    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
-    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
-    "C:\\Users\\sheik\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.2\\swashbuckle.aspnetcore.6.2.2.nupkg.sha512",
-    "C:\\Users\\sheik\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.2\\swashbuckle.aspnetcore.swagger.6.2.2.nupkg.sha512",
-    "C:\\Users\\sheik\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.2\\swashbuckle.aspnetcore.swaggergen.6.2.2.nupkg.sha512",
-    "C:\\Users\\sheik\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.2\\swashbuckle.aspnetcore.swaggerui.6.2.2.nupkg.sha512"
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1902",
-      "level": "Warning",
-      "message": "Package 'Swashbuckle.AspNetCore.SwaggerUI' 6.2.2 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qrmm-w75w-3wpx",
-      "projectPath": "C:\\Users\\sheik\\OneDrive - ViaUC\\VIA University\\Subjects and Education\\Software Engineering\\Semester 3\\DNP-1\\DNP-1 Assignments\\ForumAssignment\\Server\\WebAPI\\WebAPI.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\sheik\\OneDrive - ViaUC\\VIA University\\Subjects and Education\\Software Engineering\\Semester 3\\DNP-1\\DNP-1 Assignments\\ForumAssignment\\Server\\WebAPI\\WebAPI.csproj",
-      "libraryId": "Swashbuckle.AspNetCore.SwaggerUI",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }

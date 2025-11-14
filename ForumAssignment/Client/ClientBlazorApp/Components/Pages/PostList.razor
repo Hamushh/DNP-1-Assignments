@@ -1,24 +1,24 @@
 @page "/posts"
-@attribute [Authorize]
 @using DTOs.PostDTOs
 @using ClientBlazorApp.Services.ServiceInterfaces
-@using Microsoft.AspNetCore.Authorization
+@rendermode InteractiveServer
 @inject IPostService PostService
 @inject NavigationManager Nav
-<h3>PostList</h3>
 
-@if (posts == null)
+<h1>List of Posts</h1>
+
+@if (_posts == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (!posts.Any())
+else if (!_posts.Any())
 {
-    <p>No posts yet. <a href="/create-post">Create one?</a></p>
+    <p>No posts yet, <NavLink href="/post/create">want to add a post?</NavLink></p>
 }
 else
 {
     <ul class="list-group">
-        @foreach (var post in posts)
+        @foreach (var post in _posts)
         {
             <li class="list-group-item">
                 <b>@post.Title</b>
@@ -29,11 +29,11 @@ else
 }
 
 @code {
-    private List<CreatePostDTO>? posts;
+    private List<OutputPostDTO>? _posts;
 
     protected override async Task OnInitializedAsync()
     {
-        posts = await PostService.GetAllPostsAsync();
+        _posts = (await PostService.GetAllPostsAsync("")).ToList();
     }
 
     private void ViewDetails(int id)

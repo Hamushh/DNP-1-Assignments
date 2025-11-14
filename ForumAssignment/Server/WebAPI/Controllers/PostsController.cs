@@ -7,7 +7,7 @@ using RepositoryContracts;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/posts")]
 
 public class PostsController : ControllerBase
 {

@@ -1,33 +1,32 @@
 @page "/post/{Id:int}"
-@using System.Security.Claims
 @using ClientBlazorApp.Services.ServiceInterfaces
-@using Microsoft.AspNetCore.Components.Authorization
-@using DTOs.CommentDTOs
+@rendermode InteractiveServer
 @using DTOs.PostDTOs
+@using DTOs.CommentDTOs
 
 @inject IPostService PostService
-@inject ICommentService commentService
+@inject ICommentService CommentService
 
-<h3>Post Details</h3>
+<h1>Post and Comment Details</h1>
 
-@if (post is null)
+@if (_post is null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
     <div class="card p-3 mb-3">
-        <h4>@post.Title</h4>
-        <p>@post.Body</p>
-        <p><i>By @post.AuthorName (UserId: @post.UserId)</i></p>
+        <h4>@_post.Title</h4>
+        <p>@_post.Body</p>
+        <p><i>Author: User @_post.UserId</i></p>
     </div>
 
     <h5>Comments</h5>
 
-    @if (comments.Any())
+    @if (_comments.Any())
     {
         <ul class="list-group mb-3">
-            @foreach (var c in comments)
+            @foreach (var c in _comments)
             {
                 <li class="list-group-item">
                     <div><b>User @c.UserId</b></div>
@@ -41,95 +40,58 @@ else
         <p>No comments yet.</p>
     }
 
-    <AuthorizeView>
-        <Authorized>
-            <h5>Add Comment</h5>
-            <div class="mb-2">
-                <label class="form-label">Comment</label>
-                <textarea class="form-control" rows="3" @bind="newComment.Body"></textarea>
-            </div>
-            <button class="btn btn-primary" @onclick="AddComment">Add Comment</button>
-        </Authorized>
-        <NotAuthorized>
-            <p class="text-muted">You must be logged in to comment.</p>
-        </NotAuthorized>
-    </AuthorizeView>
+    <h5>Add Comment</h5>
+    <textarea class="form-control mb-2" rows="3" @bind="_newCommentBody"></textarea>
+    <button class="btn btn-primary" @onclick="AddComment">Add Comment</button>
 
-    @if (!string.IsNullOrEmpty(message))
+    @if (!string.IsNullOrEmpty(_message))
     {
-        <p class="text-success mt-2">@message</p>
+        <p class="text-success mt-2">@_message</p>
     }
-    @if (!string.IsNullOrEmpty(error))
+    @if (!string.IsNullOrEmpty(_error))
     {
-        <p class="text-danger mt-2">@error</p>
+        <p class="text-danger mt-2">@_error</p>
     }
 }
 
 @code {
     [Parameter] public int Id { get; set; }
 
-    private CreatePostDTO? post;
-    private List<CreateCommentDTO> comments = new();
+    private OutputPostDTO? _post;
+    private List<OutputCommentDTO> _comments = new();
 
-    // We only bind the body; author id will come from claims
-    private CreateCommentDTO newComment = new() { PostId = 0, Body = "" };
-
-    private string? message, error;
-
-    [CascadingParameter] public Task<AuthenticationState> State { get; set; } = default!;
-    private int? currentUserId;
+    private string _newCommentBody = "";
+    private string? _message;
+    private string? _error;
 
     protected override async Task OnParametersSetAsync()
     {
-        // load post + comments
-        post = await PostService.GetSinglePostAsync(Id);
-        comments = await commentService.GetSingleCommentAsync(Id);
-
-        // set form defaults
-        newComment = new CreateCommentDTO { PostId = Id, UserId = 0, Body = "" };
-
-        // read user id from claims (if logged in)
-        var auth = await State;
-        var user = auth.User;
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            var idStr = user.Claims.SingleOrDefault(c => c.Type == "Id")?.Value;
-            if (int.TryParse(idStr, out var uid))
-                currentUserId = uid;
-        }
-        else
-        {
-            currentUserId = null;
-        }
+        _post = await PostService.GetSinglePostAsync(Id);
+        _comments = (await CommentService.GetCommentsByPostIdAsync(Id)).ToList();
     }
 
     private async Task AddComment()
     {
         try
         {
-            if (currentUserId is null)
+            var dto = new CreateCommentDTO
             {
-                error = "You must be logged in to comment.";
-                message = null;
-                return;
-            }
+                PostId = Id,
+                UserId = 1,
+                Body = _newCommentBody
+            };
 
-            // ensure correct post + author ids
-            newComment.PostId = Id;
-            newComment.UserId = currentUserId.Value;
+            var added = await CommentService.AddCommentAsync(dto);
 
-            var added = await commentService.AddCommentAsync(newComment);
-
-            // optimistic update
-            comments.Insert(0, added);
-            newComment.Body = "";
-            message = " Comment added!";
-            error = null;
+            _comments.Insert(0, added);
+            _newCommentBody = "";
+            _message = "Comment added!";
+            _error = null;
         }
         catch (Exception ex)
         {
-            error = $" {ex.Message}";
-            message = null;
+            _error = ex.Message;
+            _message = null;
         }
     }
 }

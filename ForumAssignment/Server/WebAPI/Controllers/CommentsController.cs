@@ -8,7 +8,7 @@ using RepositoryContracts;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/comments")]
 
 public class CommentsController : ControllerBase
 {
@@ -113,6 +113,23 @@ public class CommentsController : ControllerBase
             throw;
         }
     }
+    
+    [HttpGet("post/{postId:int}")]
+    public async Task<ActionResult<IEnumerable<OutputCommentDTO>>> GetAllCommentsByPostId(int postId)
+    {
+        var comments = await commentRepo.GetAllCommentsByPostIdAsync(postId);
+
+        var dto = comments.Select(c => new OutputCommentDTO
+        {
+            Id = c.Id,
+            PostId = c.PostId,
+            UserId = c.UserId,
+            Body = c.Body
+        });
+
+        return Ok(dto);
+    }
+
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteComment([FromRoute] int id)
