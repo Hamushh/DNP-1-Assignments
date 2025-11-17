@@ -1,48 +1,32 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Hizzy's Forum Page</a>
+﻿<div class="sidebar-container">
+    <div class="sidebar-header">
+        <h4 class="fw-bold text-white m-0">Zuora</h4>
     </div>
-</div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <nav class="nav flex-column mt-4">
+        <NavLink class="nav-item-link" href="" Match="NavLinkMatch.All">
+            <i class="bi bi-house-door me-2"></i> Home
+        </NavLink>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">s
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/user/create">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Create User
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/post/create">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Create Post
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/posts/">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> View Post
-            </NavLink>
-        </div>
+        <NavLink class="nav-item-link" href="/user/create">
+            <i class="bi bi-person-plus me-2"></i> Create User
+        </NavLink>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
+        <NavLink class="nav-item-link" href="/post/create">
+            <i class="bi bi-pencil-square me-2"></i> Create Post
+        </NavLink>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+        <NavLink class="nav-item-link" href="/posts/">
+            <i class="bi bi-list-ul me-2"></i> View Posts
+        </NavLink>
+
+        <NavLink class="nav-item-link" href="counter">
+            <i class="bi bi-plus-square me-2"></i> Counter
+        </NavLink>
+
+        <NavLink class="nav-item-link" href="weather">
+            <i class="bi bi-cloud-sun me-2"></i> Weather
+        </NavLink>
     </nav>
 </div>
 

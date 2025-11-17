@@ -1,5 +1,33 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject NavigationManager NavMgr
 
-<h2>Hello, Welcome to Hizzy's Forum Page, Please login with your Username and Password</h2>
+<PageTitle>Home</PageTitle>
 
+<div class="container py-5 text-center">
+    <h1 class="display-5 fw-bold text-primary mb-4">
+        Hello, Welcome to Hizzy's Zuora Page!
+    </h1>
+
+    <AuthorizeView>
+        <Authorized>
+            <h4 class="text-success">Hello, @context.User.Identity?.Name!</h4>
+        </Authorized>
+        <NotAuthorized>
+            <p class="lead text-muted mb-4">
+                Please login with your <span class="fw-semibold">Username</span> and <span class="fw-semibold">Password</span> below.
+            </p>
+
+            <button class="btn btn-lg btn-gradient px-4 shadow-sm" @onclick="GoLogin">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Go to Login
+            </button>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private void GoLogin()
+    {
+        NavMgr.NavigateTo("/login");
+    }
+}

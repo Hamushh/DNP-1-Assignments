@@ -1,6 +1,8 @@
+using ClientBlazorApp.Authentication;
 using ClientBlazorApp.Components;
 using ClientBlazorApp.Services.ServiceControllers;
 using ClientBlazorApp.Services.ServiceInterfaces;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+
 builder.Services.AddScoped<IPostService, HttpPostService>();
 builder.Services.AddScoped<IUserService, HttpUserService>();
 builder.Services.AddScoped<ICommentService, HttpCommentService>();
+builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthProvider>();
 
 builder.Services.AddHttpClient<IPostService, HttpPostService>(client =>
 {
@@ -26,6 +32,9 @@ builder.Services.AddHttpClient<IUserService, HttpUserService>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5173/");
 });
+
+builder.Services.AddScoped(sp =>
+    new HttpClient { BaseAddress = new Uri("http://localhost:5173/") });
 
 var app = builder.Build();
 

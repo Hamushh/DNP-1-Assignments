@@ -1,0 +1,73 @@
+@page "/login"
+@using ClientBlazorApp.Authentication
+@rendermode InteractiveServer
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager NavMgr
+
+<div class="container login-container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg border-0 p-4" style="max-width: 420px; width: 100%; border-radius: 16px;">
+        <div class="card-body text-center">
+            <h2 class="fw-bold text-primary mb-4">Welcome Back!</h2>
+            <p class="text-muted mb-4">Please log in to continue.</p>
+
+            <AuthorizeView>
+                <NotAuthorized>
+                    <div class="form-floating mb-3 text-start">
+                        <input type="text" class="form-control" id="username" placeholder="Username" @bind="userName">
+                        <label for="username">Username</label>
+                    </div>
+
+                    <div class="form-floating mb-4 text-start">
+                        <input type="password" class="form-control" id="password" placeholder="Password" @bind="password">
+                        <label for="password">Password</label>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorLabel))
+                    {
+                        <div class="alert alert-danger py-2">@errorLabel</div>
+                    }
+
+                    <button class="btn btn-gradient w-100 py-2 mb-3" @onclick="LoginAsync">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Log in
+                    </button>
+
+                    <a href="/" class="text-decoration-none text-secondary small">
+                        ← Back to Home
+                    </a>
+                </NotAuthorized>
+
+                <Authorized>
+                    <h4 class="text-success mb-3">Hello, @context.User.Identity?.Name!</h4>
+                    <button class="btn btn-outline-danger" @onclick="Logout">Log out</button>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string userName;
+    private string password;
+    private string errorLabel;
+
+    private async Task LoginAsync()
+    {
+        errorLabel = "";
+        try
+        {
+            await ((SimpleAuthProvider)AuthProvider).Login(userName, password);
+            NavMgr.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = $"Error: {e.Message}";
+        }
+    }
+
+    private void Logout()
+    {
+        ((SimpleAuthProvider)AuthProvider).Logout();
+        NavMgr.NavigateTo("/");
+    }
+}
