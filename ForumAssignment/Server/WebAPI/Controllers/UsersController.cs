@@ -15,8 +15,10 @@ public class UsersController :  ControllerBase
 
     private async Task<bool> VerifyIfUserNameIsAvailableAsync(string username)
     {
-        var users = userRepository.GetManyAsync();
-        bool exists = users.Any(u => u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
+        var users = userRepository.GetManyAsync(); // <-- FIXED (await!)
+
+        bool exists = users.Any(u => 
+            u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
 
         return !exists;
     }

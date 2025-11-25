@@ -1,11 +1,23 @@
 {
   "version": 2,
-  "dgSpecHash": "a/DbMOnE4sE=",
+  "dgSpecHash": "wCAkBUngMFA=",
   "success": true,
   "projectFilePath": "C:\\Users\\sheik\\OneDrive - ViaUC\\VIA University\\Subjects and Education\\Software Engineering\\Semester 3\\DNP-1\\DNP-1 Assignments\\ForumAssignment\\Server\\WebAPI\\WebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sheik\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.0\\microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
-    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.data.sqlite.core\\10.0.0\\microsoft.data.sqlite.core.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.0\\microsoft.entityframeworkcore.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.0\\microsoft.entityframeworkcore.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\10.0.0\\microsoft.entityframeworkcore.analyzers.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\10.0.0\\microsoft.entityframeworkcore.relational.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\10.0.0\\microsoft.entityframeworkcore.sqlite.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\10.0.0\\microsoft.entityframeworkcore.sqlite.core.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.0\\microsoft.extensions.dependencymodel.10.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.11\\sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\sqlitepclraw.core\\2.1.11\\sqlitepclraw.core.2.1.11.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.11\\sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\sheik\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.11\\sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512"
   ],
   "logs": []
 }

@@ -9,7 +9,6 @@ public class UserFileRepository : IUserRepository
 
 {
     private readonly string filePath = "users.json";
-    private List<User> users;
 
     public UserFileRepository()
 
@@ -24,7 +23,7 @@ public class UserFileRepository : IUserRepository
 
     {
         string usersAsJson = await File.ReadAllTextAsync(filePath);
-        List < User > users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
+        List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
         int maxId = (int)(users.Count > 0 ? users.Max(c => c.Id) : 1);
         user.Id = maxId + 1;
         users.Add(user);
@@ -33,7 +32,7 @@ public class UserFileRepository : IUserRepository
         return user;
     }
 
-    public  async Task Delete(int id)
+    public async Task DeleteAsync(int id)
     {
         string usersAsJson = await File.ReadAllTextAsync(filePath);
         List < User > users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
@@ -46,22 +45,20 @@ public class UserFileRepository : IUserRepository
         usersAsJson = JsonSerializer.Serialize(users);
         await File.WriteAllTextAsync(filePath, usersAsJson);
     }
-
-    public Task DeleteAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IQueryable<User> GetManyAsync()
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public async Task<User> GetSingleAsync(int id)
     {
         string usersAsJson = await File.ReadAllTextAsync(filePath);
         List < User > users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
         return users.SingleOrDefault(p => p.Id == id);
+    }
+
+    public IQueryable<User> GetManyAsync()
+    {
+        string usersAsJson = File.ReadAllText(filePath);
+        List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
+
+        return users.AsQueryable();
     }
 
     public async Task UpdateAsync(User user)
@@ -82,7 +79,12 @@ public class UserFileRepository : IUserRepository
     {
         var usersAsJson = await File.ReadAllTextAsync(filePath);
         var users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
-        return users.FirstOrDefault(u =>
+        
+        var safeUsers = users
+            .Where(u => u != null && !string.IsNullOrWhiteSpace(u.UserName))
+            .ToList();
+        
+        return safeUsers.FirstOrDefault(u =>
             u.UserName.Equals(UserName, StringComparison.OrdinalIgnoreCase));
     }
 }

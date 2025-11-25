@@ -2,8 +2,19 @@ using System;
 
 namespace Entities;
 
-public class Post(int Id, string Title, string Body, int UserId)
+public class Post
 {
+
+    public Post(int Id, string Title, string Body, int UserId)
+    {
+        this.Id = Id;
+        this.Title = Title;
+        this.Body = Body;
+        this.UserId = UserId;
+    }
+    
+    public Post() {}
+    
     public int Id { get; set; }
     public string Title { get; set; }
     public string Body { get; set; }
